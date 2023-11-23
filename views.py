@@ -2,7 +2,7 @@
 from flask import render_template, request, redirect, url_for,session
 from flask import session, jsonify
 
-from models import db, Manager,Client,Supplier
+from models import db, Manager,Client,Supplier,Product
 from time import sleep
 def init_app(app):
     @app.route('/')
@@ -102,14 +102,18 @@ def init_app(app):
                 return redirect(url_for('supplier_dashboard'))
         return render_template('supplier_login.html')
 
-    @app.route('/supplier/dashboard')
+    @app.route('/supplier/dashboard',methods=['GET', 'POST'])
     def supplier_dashboard():
         if 'user_type' in session and session['user_type'] == 'supplier':
             username = session.get('username')
             user_type = session.get('user_type')
-            return render_template('supplier_dashboard.html', username=username, user_type=user_type)
-        return render_template('supplier_login.html')
 
+            # Get the list of products for the current supplier
+            products = get_products_for_supplier()
+
+            return render_template('supplier_dashboard.html', username=username, user_type=user_type, products=products)
+
+        return render_template('supplier_login.html')
 
     @app.route('/supplier/register', methods=['GET', 'POST'])
     def supplier_register():
@@ -137,4 +141,48 @@ def init_app(app):
     def clear_session():
         session.clear()
         return jsonify(success=True)
+###Supplier add new projects html###########
+# app.py
+
+
+    @app.route('/supplier/new_product', methods=['GET', 'POST'])
+    def new_product():
+        # Check if the user is a supplier and logged in
+        if 'user_type' in session and session['user_type'] == 'supplier':
+            if request.method == 'POST':
+                # Retrieve form data
+                name = request.form.get('product_name')
+                category = request.form.get('product_category')
+                price = float(request.form.get('product_price'))
+                location = request.form.get('product_location')
+
+                # Get the supplier ID using the session username
+                supplier = Supplier.query.filter_by(username=session['username']).first()
+                if supplier:
+                    supplier_id = supplier.id
+
+                    # Create a new Product instance
+                    new_product = Product(name=name, category=category, price=price, location=location, supplier_id=supplier_id)
+
+                    # Add the new product to the database
+                    db.session.add(new_product)
+                    db.session.commit()
+                    print("POST Rendering supplier_dashboard.html")
+                    return redirect(url_for('supplier_dashboard'))
+            print("Rendering supplier_dashboard.html")
+            # Render the form template for GET requests
+            return render_template('supplier_dashboard.html', products=get_products_for_supplier())
         
+        # Redirect to the supplier login page if the user is not logged in or not a supplier
+        return render_template('supplier_login.html')
+
+
+    # Helper function to get products for the current supplier
+    def get_products_for_supplier():
+        print("==============get_products function")
+        if 'user_type' in session and session['user_type'] == 'supplier':
+            supplier = Supplier.query.filter_by(username=session['username']).first()
+            if supplier:
+                products = Product.query.filter_by(supplier_id=supplier.id).all()
+                return products
+        return []

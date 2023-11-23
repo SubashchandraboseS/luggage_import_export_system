@@ -1,10 +1,59 @@
-{% extends "index.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Dashboard</title>
+    <style>
+        /* Add your styles here */
+    </style>
+</head>
+<body>
 
 {% block content %}
   <div class="dashboard">
     <h2>Welcome, {{ username }}!</h2>
+    
+    <h3>Your Products</h3>
+    <ul>
+      {% for product in products %}
+        <li>{{ product.name }} - {{ product.category }} - ${{ product.price }} - {{ product.location }}</li>
+      {% endfor %}
+    </ul>
+    
+    <!-- Button to toggle the form visibility -->
+    <h3 id="toggleForm" style="cursor: pointer; color: blue; text-decoration: underline;">Add New Product</h3>
+    
+    <!-- Form to add a new product (initially hidden) -->
+    <form id="newProductForm" method="post" action="{{ url_for('new_product') }}" style="display: none;">
+      <label for="product_name">Product Name:</label>
+      <input type="text" id="product_name" name="product_name" required><br>
+
+      <label for="product_category">Category:</label>
+      <input type="text" id="product_category" name="product_category" required><br>
+
+      <label for="product_price">Price:</label>
+      <input type="number" id="product_price" name="product_price" required><br>
+
+      <label for="product_location">Location:</label>
+      <input type="text" id="product_location" name="product_location" required><br>
+
+      <input type="submit" value="Add Product">
+    </form>
+
+    <!-- JavaScript to toggle the form visibility -->
+    <script>
+      document.getElementById('toggleForm').addEventListener('click', function() {
+        var form = document.getElementById('newProductForm');
+        form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+      });
+    </script>
+    
     <!-- Add your dashboard content here -->
     <p>This is the {{user_type}} dashboard.</p>
     <a href="{{ url_for('logout') }}">Logout</a>
   </div>
 {% endblock %}
+
+</body>
+</html>
