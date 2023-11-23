@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Registration</title>
+    <!-- Add any additional styling or meta tags here -->
+</head>
+<body>
+
+<h2>Manager Registration</h2>
+
+<form action="{{ url_for('manager_register') }}" method="post">
+    <label for="managerUsername">Username:</label>
+    <input type="text" id="managerUsername" name="managerUsername" required>
+
+    <label for="managerPassword">Password:</label>
+    <input type="password" id="managerPassword" name="managerPassword" required>
+
+    <button type="submit">Register</button>
+</form>
+
+<!-- Add any additional content or links here -->
+
+</body>
+</html>

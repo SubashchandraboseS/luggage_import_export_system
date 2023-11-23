@@ -1,0 +1,18 @@
+@startuml Usecase
+!define ICONURL_USER img/user-male.png
+!define ICONURL_SUPPLIER img/factory.png
+!define ICONURL_MANAGER img/businessman.png
+
+actor User as u
+actor Supplier as s
+actor Manager as m
+
+u --> (User Registration)
+s --> (Supplier Registration)
+m --> (Manager Registration)
+
+note left of u
+  ![](img/user-male.png)
+end note
+
+@enduml

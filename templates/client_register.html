@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Registration</title>
+    <!-- Add any additional styling or meta tags here -->
+</head>
+<body>
+
+<h2>Client Registration</h2>
+
+<form action="{{ url_for('client_register') }}" method="post">
+    <label for="clientUsername">Username:</label>
+    <input type="text" id="clientUsername" name="clientUsername" required>
+
+    <label for="clientPassword">Password:</label>
+    <input type="password" id="clientPassword" name="clientPassword" required>
+
+    <button type="submit">Register</button>
+</form>
+
+<!-- Add any additional content or links here -->
+
+</body>
+</html>

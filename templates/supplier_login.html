@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Login</title>
+    <!-- Add any additional styling or meta tags here -->
+</head>
+<body>
+
+<h2>Supplier Login</h2>
+
+<form action="{{ url_for('supplier_login') }}" method="post">
+    <label for="supplierUsername">Username:</label>
+    <input type="text" id="supplierUsername" name="supplierUsername" required>
+
+    <label for="supplierPassword">Password:</label>
+    <input type="password" id="supplierPassword" name="supplierPassword" required>
+
+    <button type="submit">Login</button>
+</form>
+
+<!-- Add any additional content or links here -->
+
+</body>
+</html>
