@@ -1,10 +1,30 @@
-{% extends "index.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+    <!-- Add your CSS stylesheets or links here -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
 
-{% block content %}
-  <div class="dashboard">
-    <h2>Welcome, {{ username }}!</h2>
-    <!-- Add your dashboard content here -->
-    <p>This is the {{user_type}} dashboard.</p>
-    <a href="{{ url_for('logout') }}">Logout</a>
-  </div>
-{% endblock %}
+<nav class="navbar">
+    <ul>
+        <li><a href="{{ url_for('manage_products') }}">Manage Products</a></li>
+        <li><a href="{{ url_for('view_products') }}">View Products</a></li>
+        <li><a href="{{ url_for('view_suppliers') }}">View Supplier</a></li>
+        <li><a href="{{ url_for('view_clients') }}">View Client</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+</nav>
+
+<div class="content">
+    <h1>Manager Dashboard</h1>
+    <!-- Add your manager dashboard content here -->
+    <p>Welcome, {{ username }}! This is the manager dashboard.</p>
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+@startuml UCD
+
+actor Client as client
+actor Manager as manager
+actor Supplier as supplier
+
+usecase "Client Login" as clientLogin
+usecase "Client Dashboard" as clientDashboard
+usecase "Client Registration" as clientRegister
+usecase "Manager Login" as managerLogin
+usecase "Manager Dashboard" as managerDashboard
+usecase "Manager Registration" as managerRegister
+usecase "Supplier Login" as supplierLogin
+usecase "Supplier Dashboard" as supplierDashboard
+usecase "Supplier Registration" as supplierRegister
+usecase "Logout" as logout
+usecase "Add New Product" as newProduct
+
+client --> clientLogin
+client --> clientDashboard
+client --> clientRegister
+manager --> managerLogin
+manager --> managerDashboard
+manager --> managerRegister
+supplier --> supplierLogin
+supplier --> supplierDashboard
+supplier --> supplierRegister
+
+clientLogin --> clientDashboard : Successful Login
+managerLogin --> managerDashboard : Successful Login
+supplierLogin --> supplierDashboard : Successful Login
+
+clientDashboard --> logout
+managerDashboard --> logout
+supplierDashboard --> logout
+
+supplierDashboard --> newProduct
+
+@enduml

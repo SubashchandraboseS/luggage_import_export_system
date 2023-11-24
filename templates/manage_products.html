@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products</title>
+</head>
+<body>
+
+<h1>Product Management</h1>
+
+{% for product in products %}
+    <div>
+        <h3>{{ product.name }}</h3>
+        <p>Category: {{ product.category }}</p>
+        {% if product.blocked %}
+            <p>Status: Blocked</p>
+            <form method="post" action="{{ url_for('manage_products') }}">
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <input type="hidden" name="block_status" value="unblock">
+                <button type="submit">Unblock</button>
+            </form>
+        {% else %}
+            <p>Status: Active</p>
+            <form method="post" action="{{ url_for('manage_products') }}">
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <input type="hidden" name="block_status" value="block">
+                <button type="submit">Block</button>
+            </form>
+        {% endif %}
+        <hr>
+    </div>
+{% endfor %}
+
+</body>
+</html>

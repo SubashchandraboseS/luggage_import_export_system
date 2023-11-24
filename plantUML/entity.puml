@@ -1,0 +1,36 @@
+@startuml END
+
+!define ENTITY class
+
+ENTITY Manager {
+  + id: Integer
+  + username: String
+  + password: String
+}
+
+ENTITY Client {
+  + id: Integer
+  + username: String
+  + password: String
+}
+
+ENTITY Supplier {
+  + id: Integer
+  + username: String
+  + password: String
+}
+
+ENTITY Product {
+  + id: Integer
+  + name: String
+  + category: String
+  + price: Float
+  + location: String
+  + supplier_id: Integer
+}
+
+Manager --|{ Product: Manages
+Client --|{ Product: Purchases
+Supplier --o Product: Supplies
+
+@enduml

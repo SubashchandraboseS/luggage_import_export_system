@@ -1,10 +1,223 @@
-{% extends "index.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Dashboard</title>
+    <style>
+        /* Add your styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #333;
+            padding: 15px;
+            color: white;
+            overflow: hidden;
+            text-align: right;
+        }
+
+        .navbar a {
+            float: right;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .dashboard {
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Autocomplete styles */
+        #search_query {
+            width: 200px;
+        }
+
+        #suggestion-dropdown {
+            position: absolute;
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <span style="float: left; padding: 14px;">Welcome, {{ username }}!</span>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</div>
 
 {% block content %}
   <div class="dashboard">
     <h2>Welcome, {{ username }}!</h2>
     <!-- Add your dashboard content here -->
-    <p>This is the {{user_type}} dashboard.</p>
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <p>This is the result+++++++ {{ user_type }} dashboard.</p>
+   
+    <h3>Search Results</h3>
+
+    <form id="searchForm" method="post" action="{{ url_for('client_dashboard') }}">
+      <label for="search_query">Search Products:</label>
+      <input type="text" name="search_query" id="search_query" placeholder="Enter product name or category">
+      <button type="submit">Search</button>
+      <!-- Suggestion dropdown -->
+      <div id="suggestion-dropdown"></div>
+    </form>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Location</th>
+                <th>Action</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if selected_product %}
+            <tr>
+                <td>{{ selected_product.id }}</td>
+                <td>{{ selected_product.name }}</td>
+                <td>{{ selected_product.category }}</td>
+                <td>{{ selected_product.price }}</td>
+                <td>{{ selected_product.location }}</td>
+                <td><button onclick="bookProduct('{{ selected_product.id }}')">Book</button></td>
+                <td></td><button onclick="unbookProduct('{{ selected_product.id }}')">Unbook</button></td>
+            </tr>
+            {% else %}
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.id }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.location }}</td>
+                    <td><button onclick="bookProduct('{{ product.id }}')">Book</button></td>
+                    <td><button onclick="unbookProduct('{{ product.id }}')">Unbook</button></td>
+                    
+                </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
   </div>
+<!-- Display booked products -->
+<h3>Your Booked Products</h3>
+<ul>
+  {% for booked_product in booked_products %}
+    <li>{{ booked_product.name }} - {{ booked_product.category }} - ${{ booked_product.price }} - {{ booked_product.location }}</li>
+  {% endfor %}
+</ul>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+  <!-- Add autocomplete JavaScript code -->
+  <script>
+    // Function to handle booking the product
+    function bookProduct(productId) {
+      // Make a POST request to book the product
+      fetch(`/client/book_product/${productId}`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Product booked successfully!');
+            // Optionally, you can update the UI to reflect the booked status
+            // For example, you can reload the page to refresh the product list
+            window.location.reload();
+          } else {
+            alert('Product is already booked.');
+          }
+        })
+        .catch(error => console.error('Error booking product:', error));
+    }
+  
+    const searchQueryInput = document.getElementById('search_query');
+    const suggestionDropdown = document.getElementById('suggestion-dropdown');
+  
+    searchQueryInput.addEventListener('input', function() {
+      const query = this.value;
+      if (query.length >= 2) {
+        fetch(`/get_product_suggestions_client?query=${query}`)
+          .then(response => response.json())
+          .then(data => {
+            updateSuggestions(data);
+          })
+          .catch(error => console.error('Error fetching suggestions:', error));
+      } else {
+        // Clear suggestion dropdown if the query is less than two characters
+        updateSuggestions([]);
+      }
+    });
+  
+    function updateSuggestions(suggestions) {
+      suggestionDropdown.innerHTML = '';
+  
+      suggestions.forEach(suggestion => {
+        const suggestionItem = document.createElement('div');
+        suggestionItem.textContent = suggestion;
+        suggestionItem.addEventListener('click', function() {
+          searchQueryInput.value = suggestion;
+          document.querySelector('form').submit();
+        });
+        suggestionDropdown.appendChild(suggestionItem);
+      });
+    }
+    function unbookProduct(productId) {
+        fetch(`/client/unbook_product/${productId}`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Product unbooked successfully!');
+                    window.location.reload();
+                } else {
+                    alert('You have not booked this product.');
+                }
+            })
+            .catch(error => console.error('Error unbooking product:', error));
+    }
+    
+  </script>
+  
 {% endblock %}
+
+</body>
+</html>

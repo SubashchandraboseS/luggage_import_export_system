@@ -1,0 +1,25 @@
+@startuml arch
+
+!define DATABASE class
+!define WEB_SERVER class
+!define FLASK_APP class
+
+DATABASE Database {
+  + Tables
+}
+
+WEB_SERVER WebServer {
+  + Handles HTTP Requests
+  + SSL Termination
+}
+
+FLASK_APP FlaskApp {
+  + Business Logic
+  + URL Routing
+  + SQLAlchemy Integration
+}
+
+Database --|> FlaskApp
+WebServer --|> FlaskApp
+
+@enduml

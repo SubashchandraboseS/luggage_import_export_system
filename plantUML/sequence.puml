@@ -1,0 +1,26 @@
+@startuml SD
+
+participant Client as client
+participant views
+database db
+
+client -> views: HTTP GET /client/login
+views -> views: Render client_login.html
+client <- views: HTML response
+
+client -> views: HTTP POST /client/login
+views -> db: Query Client for authentication
+db --> views: Authentication result
+views -> views: Set session variables
+client <- views: Redirect to /client/dashboard
+
+client -> views: HTTP GET /client/dashboard
+views -> views: Check session for authentication
+views -> views: Render client_dashboard.html
+client <- views: HTML response
+
+client -> views: HTTP GET /logout
+views -> views: Clear session
+client <- views: Redirect to /
+
+@enduml

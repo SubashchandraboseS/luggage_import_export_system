@@ -13,11 +13,18 @@
 {% block content %}
   <div class="dashboard">
     <h2>Welcome, {{ username }}!</h2>
-    
+  
     <h3>Your Products</h3>
     <ul>
       {% for product in products %}
         <li>{{ product.name }} - {{ product.category }} - ${{ product.price }} - {{ product.location }}</li>
+      {% endfor %}
+    </ul>
+    
+    <h3>Your Booked Products</h3>
+    <ul>
+      {% for booked_product in booked_products %}
+        <li>{{ booked_product.name }} - {{ booked_product.category }} - ${{ booked_product.price }} - {{ booked_product.location }}</li>
       {% endfor %}
     </ul>
     

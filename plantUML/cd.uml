@@ -1,0 +1,54 @@
+@startuml cd
+
+!define DATABASE class
+!define FLASK_APP class
+!define CLIENT class
+!define MANAGER class
+!define SUPPLIER class
+!define PRODUCT class
+
+DATABASE Database {
+  + Tables
+}
+
+FLASK_APP FlaskApp {
+  + clear_session()
+  + get_products_for_supplier()
+}
+
+CLIENT Client {
+  + id: Integer
+  + username: String
+  + password: String
+}
+
+MANAGER Manager {
+  + id: Integer
+  + username: String
+  + password: String
+}
+
+SUPPLIER Supplier {
+  + id: Integer
+  + username: String
+  + password: String
+}
+
+PRODUCT Product {
+  + id: Integer
+  + name: String
+  + category: String
+  + price: Float
+  + location: String
+}
+
+Database --|> Client
+Database --|> Manager
+Database --|> Supplier
+Database --|> Product
+FlaskApp --|> Client
+FlaskApp --|> Manager
+FlaskApp --|> Supplier
+FlaskApp --|> Product
+
+@enduml

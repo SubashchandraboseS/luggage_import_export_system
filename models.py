@@ -26,4 +26,13 @@ class Product(db.Model):
     location = db.Column(db.String(255), nullable=False)
     supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.id'), nullable=False)
     supplier = db.relationship('Supplier', backref=db.backref('products', lazy=True))
+    blocked = db.Column(db.Boolean, default=False)  # Added a new column to indicate if the product is blocked
     # Add other columns as needed
+    # Add other columns as needed
+# models.py
+class Booking(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
+    client = db.relationship('Client', backref=db.backref('bookings', lazy=True))
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    product = db.relationship('Product', backref=db.backref('bookings', lazy=True))
